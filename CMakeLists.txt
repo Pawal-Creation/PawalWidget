@@ -25,6 +25,10 @@ fetchcontent_makeavailable(PawalNativeApi)
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
+if(MSVC)
+    list(APPEND srcs "${PROJECT_SOURCE_DIR}/logo.rc")
+endif()
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(${PROJECT_NAME} MANUAL_FINALIZATION ${srcs})
 else()
