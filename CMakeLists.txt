@@ -18,7 +18,7 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 aux_source_directory(./src srcs)
 
-fetchcontent_declare(PawalNativeApi GIT_REPOSITORY "https://github.com/NaturalSelect/PawalNativeApi" GIT_TAG "master" SOURCE_DIR "${PROJECT_SOURCE_DIR}/lib/PawalNativeApi")
+fetchcontent_declare(PawalNativeApi GIT_REPOSITORY "https://github.com/Pawal-Creation/PawalNativeApi" GIT_TAG "master" SOURCE_DIR "${PROJECT_SOURCE_DIR}/lib/PawalNativeApi")
 fetchcontent_makeavailable(PawalNativeApi)
 
 # Specify MSVC UTF-8 encoding   
