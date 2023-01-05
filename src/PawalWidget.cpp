@@ -7,10 +7,12 @@
 
 #include <pawal/AnosuApi.hpp>
 
-PawalWidget::PawalWidget(QWidget* parent)
+PawalWidget::PawalWidget(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui_PawalWidget)
-    , api_(new (std::nothrow) pawal::AnosuApi{})
+    ,ui(new Ui_PawalWidget)
+    ,api_(new (std::nothrow) pawal::AnosuApi{})
+    ,lastHeight_(0)
+    ,lastWidth_(0)
 {
     if(!this->api_)
     {
@@ -90,24 +92,29 @@ void PawalWidget::OnShowImage(std::vector<char> imageBytes)
     {
         this->ChangeUi();
     }
-    uchar *data{reinterpret_cast<uchar*>(imageBytes.data())};
+    uchar *data{reinterpret_cast<uchar *>(imageBytes.data())};
     QPixmap bitmap;
     bitmap.loadFromData(data,static_cast<uint>(imageBytes.size()));
     QGraphicsScene *scene{this->ui->imageView_->scene()};
+    qreal imageHeight{static_cast<qreal>(bitmap.height())};
+    qreal imageWidght{static_cast<qreal>(bitmap.width())};
+    qreal height{static_cast<qreal>(this->ui->imageView_->height())};
+    qreal widght{static_cast<qreal>(this->ui->imageView_->width())};
     if(!scene)
     {
         scene = new (std::nothrow) QGraphicsScene{};
         this->ui->imageView_->setScene(scene);
         scene->addPixmap(bitmap);
-        qreal height{static_cast<qreal>(this->ui->imageView_->height())};
-        qreal widght{static_cast<qreal>(this->ui->imageView_->width())};
-        this->ui->imageView_->scale(widght/bitmap.width(),height/bitmap.height());
-    }
+    }   
     else
     {
         scene->clear();
         scene->addPixmap(bitmap);
+        this->ui->imageView_->scale(this->lastWidth_/widght,this->lastHeight_/height);
     }
+    this->ui->imageView_->scale(widght/imageWidght,height/imageHeight);
+    this->lastWidth_ = imageWidght;
+    this->lastHeight_ = imageHeight;
     this->ui->lookupButton_->setEnabled(true);
     this->ui->lookupButton_->setText(tr("Lookup"));
     this->ui->keywordEdit_->clear();
@@ -147,7 +154,7 @@ void PawalWidget::OnSaveClicked()
     {
         return;
     }
-    QGraphicsPixmapItem *pixmap{qgraphicsitem_cast<QGraphicsPixmapItem*>(scene->items().front())};
+    QGraphicsPixmapItem *pixmap{qgraphicsitem_cast<QGraphicsPixmapItem *>(scene->items().front())};
     if(pixmap)
     {
         this->ui->saveButton_->setText(tr("Saving"));
@@ -169,5 +176,5 @@ PawalWidget::~PawalWidget()
     {
         delete scene;
     }
-    delete ui; 
+    delete ui;
 }

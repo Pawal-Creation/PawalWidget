@@ -10,6 +10,8 @@ class PawalWidget : public QWidget {
 private:
     Ui_PawalWidget* ui;
     std::unique_ptr<pawal::IPawalApi> api_;
+    qreal lastHeight_;
+    qreal lastWidth_;
 
     void ChangeUi();
 
